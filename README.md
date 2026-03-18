@@ -881,7 +881,6 @@ Copyright © 2026 孙帆. All rights reserved.
 
 **开发者**：孙帆
 **邮箱**：fandesunstar@outlook.com
-**项目地址**：[GitHub Repository URL]
 
 如有问题或建议，欢迎通过邮件联系。
 
@@ -1751,7 +1750,6 @@ Copyright © 2026 Sun Fan. All rights reserved.
 
 **Developer**: Sun Fan
 **Email**: fandesunstar@outlook.com
-**Project Repository**: [GitHub Repository URL]
 
 For questions or suggestions, please contact via email.
 
