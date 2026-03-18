@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fandesunstar.eship.mapper.UserMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.fandesunstar.eship.entity.User">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="email" property="email"/>
+        <result column="role" property="role"/>
+        <result column="company_name" property="companyName"/>
+        <result column="credit_score" property="creditScore"/>
+        <result column="status" property="status"/>
+        <result column="lock_until" property="lockUntil"/>
+        <result column="failed_login_attempts" property="failedLoginAttempts"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <!-- 根据用户名查询用户 -->
+    <select id="selectByUsername" resultMap="BaseResultMap">
+        SELECT * FROM tb_user WHERE username = #{username}
+    </select>
+
+    <!-- 根据邮箱查询用户 -->
+    <select id="selectByEmail" resultMap="BaseResultMap">
+        SELECT * FROM tb_user WHERE email = #{email}
+    </select>
+
+    <!-- 更新登录失败次数 -->
+    <update id="updateFailedLoginAttempts">
+        UPDATE tb_user
+        SET failed_login_attempts = #{attempts},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{userId}
+    </update>
+
+    <!-- 锁定用户账号 -->
+    <update id="lockUser">
+        UPDATE tb_user
+        SET status = 'LOCKED',
+            lock_until = #{lockUntil},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{userId}
+    </update>
+
+    <!-- 解锁用户账号 -->
+    <update id="unlockUser">
+        UPDATE tb_user
+        SET status = 'ACTIVE',
+            lock_until = NULL,
+            failed_login_attempts = 0,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{userId}
+    </update>
+
+    <!-- 重置登录失败次数 -->
+    <update id="resetFailedLoginAttempts">
+        UPDATE tb_user
+        SET failed_login_attempts = 0,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{userId}
+    </update>
+
+    <!-- 根据角色查询用户列表 -->
+    <select id="selectByRole" resultMap="BaseResultMap">
+        SELECT * FROM tb_user
+        WHERE role = #{role}
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- 查询信用评分高的租家（用于船东推荐） -->
+    <select id="selectTopRentersByCredit" resultMap="BaseResultMap">
+        SELECT * FROM tb_user
+        WHERE role = 'RENTER' AND status = 'ACTIVE'
+        ORDER BY credit_score DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 更新用户信用评分 -->
+    <update id="updateCreditScore">
+        UPDATE tb_user
+        SET credit_score = #{creditScore},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{userId}
+    </update>
+
+    <!-- 更新用户状态 -->
+    <update id="updateStatus">
+        UPDATE tb_user
+        SET status = #{status},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{userId}
+    </update>
+
+    <!-- 统计用户数量（按角色） -->
+    <select id="countByRole" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM tb_user WHERE role = #{role}
+    </select>
+
+    <!-- 统计总用户数 -->
+    <select id="countTotal" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM tb_user
+    </select>
+
+</mapper>

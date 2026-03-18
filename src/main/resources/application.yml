@@ -1,0 +1,91 @@
+server:
+  port: 3473
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: E-ship
+
+  # 数据库配置
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/eship?currentSchema=easyGo
+    username: postgres
+    password: sun2137405
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  # 邮件配置
+  mail:
+    host: smtp.qq.com
+    port: 587
+    username: 188043648@qq.com
+    password: norhiozfabaobhie
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          timeout: 5000
+          connectiontimeout: 5000
+
+  # 文件上传配置
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+# MyBatis-Plus配置
+mybatis-plus:
+  mapper-locations: classpath:mapper/**/*.xml
+  type-aliases-package: com.fandesunstar.eship.entity
+  global-config:
+    db-config:
+      # 主键类型：AUTO(数据库自增)
+      id-type: auto
+      # 逻辑删除字段名
+      logic-delete-field: deleted
+      # 逻辑删除值
+      logic-delete-value: 1
+      # 逻辑未删除值
+      logic-not-delete-value: 0
+  configuration:
+    # 驼峰转下划线
+    map-underscore-to-camel-case: true
+    # 日志输出
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # 返回Map时，null值也包含
+    call-setters-on-nulls: true
+
+# 日志配置
+logging:
+  level:
+    com.fandesunstar.eship: debug
+    org.springframework: info
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# 业务配置
+eship:
+  # 验证码配置
+  verification:
+    code-length: 4
+    expire-minutes: 10
+  # 安全配置
+  security:
+    max-login-attempts: 5
+    lock-duration-hours: 1
+  # 管理员配置
+  admin:
+    username: admin
+    password: twhd#7?n*Csf
+    email: 188043648@qq.com
+    company: E-ship

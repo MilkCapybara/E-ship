@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fandesunstar.eship.mapper.ContractMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.fandesunstar.eship.entity.Contract">
+        <id column="id" property="id"/>
+        <result column="ship_id" property="shipId"/>
+        <result column="owner_id" property="ownerId"/>
+        <result column="renter_id" property="renterId"/>
+        <result column="start_date" property="startDate"/>
+        <result column="end_date" property="endDate"/>
+        <result column="daily_rent" property="dailyRent"/>
+        <result column="total_amount" property="totalAmount"/>
+        <result column="purpose" property="purpose"/>
+        <result column="special_requirements" property="specialRequirements"/>
+        <result column="status" property="status"/>
+        <result column="reject_reason" property="rejectReason"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <!-- 查询船东的合约信箱（待审核的合约） -->
+    <select id="selectOwnerInbox" resultMap="BaseResultMap">
+        SELECT * FROM tb_contract
+        WHERE owner_id = #{ownerId} AND status = 'PENDING'
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- 查询船东的所有合约（分页） -->
+    <select id="selectByOwnerId" resultMap="BaseResultMap">
+        SELECT * FROM tb_contract
+        WHERE owner_id = #{ownerId}
+        <if test="status != null and status != ''">
+            AND status = #{status}
+        </if>
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- 查询租家的所有合约（分页） -->
+    <select id="selectByRenterId" resultMap="BaseResultMap">
+        SELECT * FROM tb_contract
+        WHERE renter_id = #{renterId}
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- 查询进行中的合约（按到期日期排序） -->
+    <select id="selectInProgressContracts" resultMap="BaseResultMap">
+        SELECT * FROM tb_contract
+        WHERE owner_id = #{ownerId}
+          AND status IN ('APPROVED', 'IN_PROGRESS')
+        ORDER BY end_date ASC
+    </select>
+
+    <!-- 根据船舶ID查询合约列表 -->
+    <select id="selectByShipId" resultMap="BaseResultMap">
+        SELECT * FROM tb_contract
+        WHERE ship_id = #{shipId}
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- 查询即将到期的合约（7天内） -->
+    <select id="selectExpiringContracts" resultMap="BaseResultMap">
+        SELECT * FROM tb_contract
+        WHERE status = 'IN_PROGRESS'
+          AND end_date BETWEEN CURRENT_DATE AND CURRENT_DATE + INTERVAL '#{days} days'
+        ORDER BY end_date ASC
+    </select>
+
+    <!-- 更新合约状态 -->
+    <update id="updateStatus">
+        UPDATE tb_contract
+        SET status = #{status},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{contractId}
+    </update>
+
+    <!-- 审核合约（同意） -->
+    <update id="approveContract">
+        UPDATE tb_contract
+        SET status = 'APPROVED',
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{contractId}
+    </update>
+
+    <!-- 审核合约（拒绝） -->
+    <update id="rejectContract">
+        UPDATE tb_contract
+        SET status = 'REJECTED',
+            reject_reason = #{rejectReason},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{contractId}
+    </update>
+
+    <!-- 统计船东的合约数量（按状态） -->
+    <select id="countByOwnerIdAndStatus" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM tb_contract
+        WHERE owner_id = #{ownerId}
+        <if test="status != null and status != ''">
+            AND status = #{status}
+        </if>
+    </select>
+
+    <!-- 统计租家的合约数量（按状态） -->
+    <select id="countByRenterIdAndStatus" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM tb_contract
+        WHERE renter_id = #{renterId}
+        <if test="status != null and status != ''">
+            AND status = #{status}
+        </if>
+    </select>
+
+    <!-- 统计活跃合约数量 -->
+    <select id="countActiveContracts" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM tb_contract
+        WHERE status IN ('APPROVED', 'IN_PROGRESS')
+    </select>
+
+    <!-- 统计总交易额 -->
+    <select id="sumTotalAmount" resultType="java.math.BigDecimal">
+        SELECT COALESCE(SUM(total_amount), 0) FROM tb_contract
+        WHERE status IN ('APPROVED', 'IN_PROGRESS', 'COMPLETED')
+    </select>
+
+    <!-- 查询交易量统计（按月） -->
+    <select id="selectMonthlyStatistics" resultType="java.util.Map">
+        SELECT
+            EXTRACT(MONTH FROM created_at) AS month,
+            COUNT(*) AS contractCount,
+            SUM(total_amount) AS totalAmount
+        FROM tb_contract
+        WHERE EXTRACT(YEAR FROM created_at) = #{year}
+          AND status IN ('APPROVED', 'IN_PROGRESS', 'COMPLETED')
+        GROUP BY EXTRACT(MONTH FROM created_at)
+        ORDER BY month
+    </select>
+
+    <!-- 查询所有合约（管理员用，分页） -->
+    <select id="selectAllContracts" resultMap="BaseResultMap">
+        SELECT * FROM tb_contract
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- 统计船东的总收入 -->
+    <select id="sumTotalAmountByOwnerId" resultType="java.math.BigDecimal">
+        SELECT COALESCE(SUM(total_amount), 0) FROM tb_contract
+        WHERE owner_id = #{ownerId}
+          AND status IN ('APPROVED', 'IN_PROGRESS', 'COMPLETED')
+    </select>
+
+    <!-- 统计租家的总支出 -->
+    <select id="sumTotalAmountByRenterId" resultType="java.math.BigDecimal">
+        SELECT COALESCE(SUM(total_amount), 0) FROM tb_contract
+        WHERE renter_id = #{renterId}
+          AND status IN ('APPROVED', 'IN_PROGRESS', 'COMPLETED')
+    </select>
+
+    <!-- 查询船东的月度收入趋势 -->
+    <select id="getMonthlyIncomeByOwnerId" resultType="java.util.Map">
+        SELECT
+            TO_CHAR(created_at, 'YYYY-MM') AS month,
+            COUNT(*) AS count,
+            COALESCE(SUM(total_amount), 0) AS amount
+        FROM tb_contract
+        WHERE owner_id = #{ownerId}
+          AND status IN ('APPROVED', 'IN_PROGRESS', 'COMPLETED')
+          AND created_at >= CURRENT_DATE - INTERVAL '6 months'
+        GROUP BY TO_CHAR(created_at, 'YYYY-MM')
+        ORDER BY month
+    </select>
+
+    <!-- 查询租家的月度支出趋势 -->
+    <select id="getMonthlyExpenseByRenterId" resultType="java.util.Map">
+        SELECT
+            TO_CHAR(created_at, 'YYYY-MM') AS month,
+            COUNT(*) AS count,
+            COALESCE(SUM(total_amount), 0) AS amount
+        FROM tb_contract
+        WHERE renter_id = #{renterId}
+          AND status IN ('APPROVED', 'IN_PROGRESS', 'COMPLETED')
+          AND created_at >= CURRENT_DATE - INTERVAL '6 months'
+        GROUP BY TO_CHAR(created_at, 'YYYY-MM')
+        ORDER BY month
+    </select>
+
+    <!-- 统计合约总数 -->
+    <select id="countTotal" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM tb_contract
+    </select>
+
+</mapper>

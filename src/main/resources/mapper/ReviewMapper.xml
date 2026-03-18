@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fandesunstar.eship.mapper.ReviewMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.fandesunstar.eship.entity.Review">
+        <id column="id" property="id"/>
+        <result column="contract_id" property="contractId"/>
+        <result column="reviewer_id" property="reviewerId"/>
+        <result column="reviewee_id" property="revieweeId"/>
+        <result column="rating" property="rating"/>
+        <result column="comment" property="comment"/>
+        <result column="created_at" property="createdAt"/>
+    </resultMap>
+
+    <!-- 查询用户收到的评价 -->
+    <select id="selectByRevieweeId" resultMap="BaseResultMap">
+        SELECT * FROM tb_review
+        WHERE reviewee_id = #{revieweeId}
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- 查询合约的评价 -->
+    <select id="selectByContractId" resultMap="BaseResultMap">
+        SELECT * FROM tb_review
+        WHERE contract_id = #{contractId}
+    </select>
+
+    <!-- 计算用户的平均评分 -->
+    <select id="calculateAverageRating" resultType="java.lang.Double">
+        SELECT AVG(rating) FROM tb_review
+        WHERE reviewee_id = #{revieweeId}
+    </select>
+
+</mapper>

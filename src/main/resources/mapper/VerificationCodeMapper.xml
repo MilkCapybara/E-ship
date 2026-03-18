@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fandesunstar.eship.mapper.VerificationCodeMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.fandesunstar.eship.entity.VerificationCode">
+        <id column="id" property="id"/>
+        <result column="email" property="email"/>
+        <result column="code" property="code"/>
+        <result column="type" property="type"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="expire_at" property="expireAt"/>
+        <result column="used" property="used"/>
+    </resultMap>
+
+    <!-- 查询最新的未使用验证码 -->
+    <select id="selectLatestUnusedCode" resultMap="BaseResultMap">
+        SELECT * FROM tb_verification_code
+        WHERE email = #{email}
+          AND type = #{type}
+          AND used = false
+          AND expire_at &gt; CURRENT_TIMESTAMP
+        ORDER BY created_at DESC
+        LIMIT 1
+    </select>
+
+    <!-- 标记验证码为已使用 -->
+    <update id="markAsUsed">
+        UPDATE tb_verification_code
+        SET used = true
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除过期的验证码 -->
+    <delete id="deleteExpiredCodes">
+        DELETE FROM tb_verification_code
+        WHERE expire_at &lt; CURRENT_TIMESTAMP
+    </delete>
+
+    <!-- 查询10分钟内是否已发送验证码 -->
+    <select id="selectRecentCode" resultMap="BaseResultMap">
+        SELECT * FROM tb_verification_code
+        WHERE email = #{email}
+          AND type = #{type}
+          AND created_at &gt; CURRENT_TIMESTAMP - INTERVAL '10 minutes'
+        ORDER BY created_at DESC
+        LIMIT 1
+    </select>
+
+</mapper>

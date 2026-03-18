@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fandesunstar.eship.mapper.ShipMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.fandesunstar.eship.entity.Ship">
+        <id column="id" property="id"/>
+        <result column="owner_id" property="ownerId"/>
+        <result column="ship_name" property="shipName"/>
+        <result column="ship_type" property="shipType"/>
+        <result column="tonnage" property="tonnage"/>
+        <result column="build_year" property="buildYear"/>
+        <result column="classification_society" property="classificationSociety"/>
+        <result column="daily_rent" property="dailyRent"/>
+        <result column="status" property="status"/>
+        <result column="rating" property="rating"/>
+        <result column="image_url" property="imageUrl"/>
+        <result column="description" property="description"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <!-- 根据船东ID查询船舶列表（分页） -->
+    <select id="selectByOwnerId" resultMap="BaseResultMap">
+        SELECT * FROM tb_ship
+        WHERE owner_id = #{ownerId}
+        ORDER BY rating DESC, created_at DESC
+    </select>
+
+    <!-- 根据船东ID和船舶类型查询船舶列表（分页） -->
+    <select id="selectByOwnerIdAndType" resultMap="BaseResultMap">
+        SELECT * FROM tb_ship
+        WHERE owner_id = #{ownerId}
+        <if test="shipType != null and shipType != ''">
+            AND ship_type = #{shipType}
+        </if>
+        ORDER BY rating DESC, created_at DESC
+    </select>
+
+    <!-- 查询可租赁的船舶（分页） -->
+    <select id="selectAvailableShips" resultMap="BaseResultMap">
+        SELECT * FROM tb_ship
+        WHERE status = 'AVAILABLE'
+        ORDER BY rating DESC, created_at DESC
+    </select>
+
+    <!-- 多条件搜索船舶（分页） -->
+    <select id="searchShips" resultMap="BaseResultMap">
+        SELECT * FROM tb_ship
+        WHERE status = 'AVAILABLE'
+        <if test="shipType != null and shipType != ''">
+            AND ship_type = #{shipType}
+        </if>
+        <if test="minRent != null">
+            AND daily_rent &gt;= #{minRent}
+        </if>
+        <if test="maxRent != null">
+            AND daily_rent &lt;= #{maxRent}
+        </if>
+        <if test="minTonnage != null">
+            AND tonnage &gt;= #{minTonnage}
+        </if>
+        <if test="maxTonnage != null">
+            AND tonnage &lt;= #{maxTonnage}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            AND (ship_name LIKE CONCAT('%', #{keyword}, '%')
+                 OR description LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+        <choose>
+            <when test="sortBy != null and sortBy != '' and sortBy.equals('dailyRent')">
+                ORDER BY daily_rent ASC, created_at DESC
+            </when>
+            <when test="sortBy != null and sortBy != '' and sortBy.equals('createdAt')">
+                ORDER BY created_at DESC
+            </when>
+            <when test="sortBy != null and sortBy != '' and sortBy.equals('rating')">
+                ORDER BY rating DESC, created_at DESC
+            </when>
+            <otherwise>
+                ORDER BY created_at DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 根据评分排序查询船舶（用于推荐） -->
+    <select id="selectTopRatedShips" resultMap="BaseResultMap">
+        SELECT * FROM tb_ship
+        WHERE status = 'AVAILABLE'
+        ORDER BY rating DESC, created_at DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 更新船舶状态 -->
+    <update id="updateStatus">
+        UPDATE tb_ship
+        SET status = #{status},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{shipId}
+    </update>
+
+    <!-- 更新船舶评分 -->
+    <update id="updateRating">
+        UPDATE tb_ship
+        SET rating = #{rating},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{shipId}
+    </update>
+
+    <!-- 统计船东的船舶数量 -->
+    <select id="countByOwnerId" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM tb_ship WHERE owner_id = #{ownerId}
+    </select>
+
+    <!-- 统计总船舶数量 -->
+    <select id="countTotal" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM tb_ship
+    </select>
+
+    <!-- 统计各类型船舶数量 -->
+    <select id="countByType" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM tb_ship WHERE ship_type = #{shipType}
+    </select>
+
+    <!-- 查询热门船舶类型统计 -->
+    <select id="selectShipTypeStatistics" resultType="java.util.Map">
+        SELECT
+            ship_type AS shipType,
+            COUNT(*) AS count,
+            AVG(rating) AS avgRating
+        FROM tb_ship
+        GROUP BY ship_type
+        ORDER BY count DESC
+    </select>
+
+    <!-- 统计船东的船舶数量（按状态） -->
+    <select id="countByOwnerIdAndStatus" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM tb_ship
+        WHERE owner_id = #{ownerId}
+        <if test="status != null and status != ''">
+            AND status = #{status}
+        </if>
+    </select>
+
+    <!-- 统计船东的船舶类型分布 -->
+    <select id="countByOwnerIdGroupByType" resultType="java.util.Map">
+        SELECT
+            ship_type AS name,
+            COUNT(*) AS value
+        FROM tb_ship
+        WHERE owner_id = #{ownerId}
+        GROUP BY ship_type
+        ORDER BY value DESC
+    </select>
+
+    <!-- 统计租家收藏的船舶数量 -->
+    <select id="countFavoritesByRenterId" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM tb_ship_favorite
+        WHERE user_id = #{renterId}
+    </select>
+
+</mapper>
