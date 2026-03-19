@@ -152,6 +152,7 @@
       <el-table :data="ships" style="width: 100%" stripe height="400">
         <el-table-column prop="id" label="ID" width="80" />
         <el-table-column prop="shipName" label="船舶名称" min-width="150" />
+        <el-table-column prop="ownerName" label="船东" min-width="120" />
         <el-table-column prop="shipType" label="类型" width="120">
           <template #default="{ row }">
             {{ getShipTypeText(row.shipType) }}
@@ -212,6 +213,7 @@
       <el-table :data="contracts" style="width: 100%" stripe height="400">
         <el-table-column prop="id" label="ID" width="80" />
         <el-table-column prop="shipName" label="船舶名称" min-width="150" />
+        <el-table-column prop="ownerName" label="船东" min-width="120" />
         <el-table-column prop="renterName" label="租家" min-width="120" />
         <el-table-column prop="startDate" label="开始日期" width="110" />
         <el-table-column prop="endDate" label="结束日期" width="110" />

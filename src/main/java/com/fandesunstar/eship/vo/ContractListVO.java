@@ -13,6 +13,7 @@ public class ContractListVO {
     private Long id;
     private Long shipId;
     private String shipName;
+    private String ownerName;
     private LocalDate startDate;
     private LocalDate endDate;
     private BigDecimal dailyRent;

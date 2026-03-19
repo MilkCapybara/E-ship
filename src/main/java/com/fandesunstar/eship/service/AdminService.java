@@ -217,6 +217,13 @@ public class AdminService {
     private ShipListVO convertToShipListVO(Ship ship) {
         ShipListVO vo = new ShipListVO();
         BeanUtils.copyProperties(ship, vo);
+
+        // 获取船东名称
+        User owner = userMapper.selectById(ship.getOwnerId());
+        if (owner != null) {
+            vo.setOwnerName(owner.getUsername());
+        }
+
         return vo;
     }
 
@@ -227,10 +234,16 @@ public class AdminService {
         ContractListVO vo = new ContractListVO();
         BeanUtils.copyProperties(contract, vo);
 
-        // 获取船舶名称
+        // 获取船舶名称和船东名称
         Ship ship = shipMapper.selectById(contract.getShipId());
         if (ship != null) {
             vo.setShipName(ship.getShipName());
+
+            // 获取船东名称
+            User owner = userMapper.selectById(ship.getOwnerId());
+            if (owner != null) {
+                vo.setOwnerName(owner.getUsername());
+            }
         }
 
         // 获取租家名称

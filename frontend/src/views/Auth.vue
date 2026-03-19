@@ -1222,175 +1222,138 @@ onUnmounted(() => {
   }
 }
 
-/* 忘记密码对话框样式 */
+/* 忘记密码对话框样式 - 模仿登录卡片 */
 .forgot-password-dialog {
   --el-dialog-bg-color: transparent;
 }
 
 :deep(.forgot-password-dialog .el-dialog) {
-  background: rgba(255, 245, 200, 0.15) !important;
+  background: rgba(15, 30, 50, 0.85) !important;
   backdrop-filter: blur(20px);
-  border: 2px solid rgba(255, 200, 0, 0.4);
-  border-radius: 20px;
-  box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.3),
-    0 0 40px rgba(255, 215, 0, 0.2),
-    inset 0 0 60px rgba(255, 255, 255, 0.05);
-  overflow: visible;
-  position: relative;
-}
-
-:deep(.forgot-password-dialog .el-dialog__body) {
-  padding: 32px;
-  position: relative;
-  background: transparent !important;
-}
-
-:deep(.forgot-password-dialog .el-dialog__footer) {
-  padding: 20px 32px 32px;
-  border-top: 1px solid rgba(255, 200, 0, 0.3);
-  background: transparent !important;
-}
-
-:deep(.forgot-password-dialog .el-form) {
-  background: transparent !important;
-}
-
-:deep(.forgot-password-dialog .el-form-item) {
-  background: transparent !important;
-}
-
-:deep(.forgot-password-dialog .el-dialog::before) {
-  content: '';
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  background: linear-gradient(45deg,
-    transparent 0%,
-    rgba(255, 215, 0, 0.1) 25%,
-    transparent 50%,
-    rgba(255, 215, 0, 0.1) 75%,
-    transparent 100%);
-  background-size: 200% 200%;
-  border-radius: 20px;
-  z-index: -1;
-  animation: borderGlow 3s linear infinite;
-}
-
-@keyframes borderGlow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-:deep(.forgot-password-dialog .el-dialog__header) {
-  background: rgba(255, 245, 200, 0.25) !important;
-  border-bottom: 2px solid rgba(255, 200, 0, 0.4);
-  padding: 24px;
-  margin: 0;
-  position: relative;
+  border-radius: 24px !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(0, 150, 255, 0.2),
+    inset 0 0 60px rgba(0, 150, 255, 0.05) !important;
+  border: 1px solid rgba(0, 150, 255, 0.3) !important;
   overflow: hidden;
 }
 
-:deep(.forgot-password-dialog .el-dialog__header::before) {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
-  animation: headerShine 2s infinite;
-}
-
-@keyframes headerShine {
-  0% { left: -100%; }
-  100% { left: 200%; }
+:deep(.forgot-password-dialog .el-dialog__header) {
+  background: transparent !important;
+  color: white;
+  padding: 30px 30px 20px 30px;
+  border-bottom: 1px solid rgba(0, 150, 255, 0.2);
 }
 
 :deep(.forgot-password-dialog .el-dialog__title) {
-  color: #8b6914;
-  font-weight: 800;
-  font-size: 24px;
-  letter-spacing: 2px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  position: relative;
-  z-index: 1;
+  font-size: 28px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #0096ff 0%, #ffc800 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 30px rgba(0, 150, 255, 0.5);
 }
 
 :deep(.forgot-password-dialog .el-dialog__close) {
-  color: #8b6914;
+  color: #0096ff !important;
   font-size: 20px;
   transition: all 0.3s ease;
 }
 
 :deep(.forgot-password-dialog .el-dialog__close:hover) {
-  color: #5a4409;
+  color: #00d4ff !important;
   transform: rotate(90deg);
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 :deep(.forgot-password-dialog .el-dialog__body) {
-  padding: 32px;
-  position: relative;
+  padding: 30px;
+  background: transparent !important;
+  color: rgba(255, 255, 255, 0.9);
 }
 
-:deep(.forgot-password-dialog .el-overlay) {
-  background-color: rgba(0, 0, 0, 0.7) !important;
+:deep(.forgot-password-dialog .el-dialog__footer) {
+  padding: 20px 30px;
+  background: transparent !important;
+  border-top: 1px solid rgba(0, 150, 255, 0.2);
 }
 
-/* 科幻背景效果 - 移除旧的，使用粒子背景 */
-.dialog-particles {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-  overflow: hidden;
-  z-index: 0;
-  border-radius: 24px;
+:deep(.forgot-password-dialog .el-form-item__label) {
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
 }
 
-.dialog-particles canvas {
-  width: 100%;
-  height: 100%;
+:deep(.forgot-password-dialog .el-form-item) {
+  margin-bottom: 22px;
 }
 
-/* 输入框样式 */
+/* 忘记密码对话框内所有输入框样式 */
+:deep(.forgot-password-dialog .el-input__wrapper) {
+  background: rgba(0, 150, 255, 0.1) !important;
+  border: 1px solid rgba(0, 150, 255, 0.3) !important;
+  box-shadow: 0 0 20px rgba(0, 150, 255, 0.1) !important;
+  transition: all 0.3s ease;
+}
+
+:deep(.forgot-password-dialog .el-input__wrapper:hover) {
+  border-color: rgba(0, 150, 255, 0.6) !important;
+  box-shadow: 0 0 30px rgba(0, 150, 255, 0.3) !important;
+  background: rgba(0, 150, 255, 0.15) !important;
+}
+
+:deep(.forgot-password-dialog .el-input__wrapper.is-focus) {
+  border-color: #0096ff !important;
+  box-shadow: 0 0 40px rgba(0, 150, 255, 0.5) !important;
+  background: rgba(0, 150, 255, 0.15) !important;
+}
+
+:deep(.forgot-password-dialog .el-input__inner) {
+  color: #0096ff !important;
+}
+
+:deep(.forgot-password-dialog .el-input__inner::placeholder) {
+  color: rgba(0, 150, 255, 0.5) !important;
+}
+
+:deep(.forgot-password-dialog .el-input__prefix) {
+  color: #0096ff !important;
+}
+
+:deep(.forgot-password-dialog .el-input__suffix) {
+  color: #0096ff !important;
+}
+
+/* 保留原有的 forgot-input 样式作为备用 */
 :deep(.forgot-input .el-input__wrapper) {
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(218, 165, 32, 0.4);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  background: rgba(0, 150, 255, 0.1) !important;
+  border: 1px solid rgba(0, 150, 255, 0.3) !important;
+  box-shadow: 0 0 20px rgba(0, 150, 255, 0.1) !important;
   transition: all 0.3s ease;
 }
 
 :deep(.forgot-input .el-input__wrapper:hover) {
-  border-color: rgba(218, 165, 32, 0.6);
-  box-shadow: 0 2px 12px rgba(218, 165, 32, 0.2);
+  border-color: rgba(0, 150, 255, 0.6) !important;
+  box-shadow: 0 0 30px rgba(0, 150, 255, 0.3) !important;
+  background: rgba(0, 150, 255, 0.15) !important;
 }
 
 :deep(.forgot-input .el-input__wrapper.is-focus) {
-  border-color: #daa520;
-  box-shadow: 0 0 0 3px rgba(218, 165, 32, 0.15);
+  border-color: #0096ff !important;
+  box-shadow: 0 0 40px rgba(0, 150, 255, 0.5) !important;
+  background: rgba(0, 150, 255, 0.15) !important;
 }
 
 :deep(.forgot-input .el-input__inner) {
-  color: #333;
-  font-weight: 500;
+  color: #0096ff !important;
 }
 
 :deep(.forgot-input .el-input__inner::placeholder) {
-  color: rgba(139, 105, 20, 0.5);
+  color: rgba(0, 150, 255, 0.5) !important;
 }
 
 :deep(.forgot-input .el-input__prefix) {
-  color: #8b6914;
+  color: #0096ff !important;
 }
 
-/* 验证码输入框 */
 .forgot-dialog .code-input-wrapper {
   display: flex;
   gap: 10px;
@@ -1402,11 +1365,10 @@ onUnmounted(() => {
   min-width: 0;
 }
 
-/* 验证码按钮 */
 .forgot-code-button {
-  background: rgba(255, 245, 200, 0.3);
-  border: 1px solid rgba(255, 200, 0, 0.5);
-  color: #8b6914;
+  background: linear-gradient(135deg, #0096ff, #00d4ff);
+  border: none;
+  color: white;
   font-weight: 600;
   transition: all 0.3s ease;
   min-width: 120px;
@@ -1414,82 +1376,49 @@ onUnmounted(() => {
 }
 
 .forgot-code-button:hover:not(:disabled) {
-  background: rgba(255, 245, 200, 0.5);
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+  background: linear-gradient(135deg, #0080e6, #00bfe6);
+  box-shadow: 0 4px 15px rgba(0, 150, 255, 0.4);
   transform: translateY(-2px);
 }
 
 .forgot-code-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+  background: rgba(0, 150, 255, 0.3);
+  color: rgba(255, 255, 255, 0.5);
 }
 
-/* 底部按钮 */
-:deep(.forgot-password-dialog .el-dialog__footer) {
-  padding: 20px 32px 32px;
-  border-top: 1px solid rgba(255, 215, 0, 0.2);
+:deep(.forgot-password-dialog .el-button) {
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
 
 .forgot-cancel-btn {
-  background: rgba(255, 245, 200, 0.2);
-  border: 2px solid rgba(255, 200, 0, 0.4);
-  color: #8b6914;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
+  background: rgba(0, 150, 255, 0.1);
+  border: 1px solid rgba(0, 150, 255, 0.3);
+  color: #0096ff;
 }
 
 .forgot-cancel-btn:hover {
-  background: rgba(255, 245, 200, 0.35);
-  border-color: rgba(255, 200, 0, 0.6);
-  color: #5a4409;
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-}
-
-.forgot-submit-btn {
-  background: linear-gradient(135deg, #f4c430 0%, #daa520 100%);
-  border: 2px solid rgba(218, 165, 32, 0.6);
-  color: #1a1a1a;
-  font-weight: 700;
-  font-size: 16px;
-  letter-spacing: 1px;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-  box-shadow:
-    0 4px 15px rgba(218, 165, 32, 0.4),
-    inset 0 0 20px rgba(255, 255, 255, 0.2);
-}
-
-.forgot-submit-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-  transition: left 0.5s;
-}
-
-.forgot-submit-btn:hover::before {
-  left: 100%;
-}
-
-.forgot-submit-btn:hover {
-  background: linear-gradient(135deg, #ffd700 0%, #f4c430 100%);
-  box-shadow:
-    0 6px 25px rgba(218, 165, 32, 0.6),
-    inset 0 0 30px rgba(255, 255, 255, 0.3);
+  background: rgba(0, 150, 255, 0.2);
+  border-color: #0096ff;
   transform: translateY(-2px);
 }
 
-.forgot-submit-btn:active {
-  transform: translateY(0);
-  box-shadow:
-    0 2px 10px rgba(218, 165, 32, 0.4),
-    inset 0 0 20px rgba(255, 255, 255, 0.2);
+.forgot-submit-btn {
+  background: linear-gradient(135deg, #0096ff, #00d4ff);
+  border: none;
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 150, 255, 0.3);
+}
+
+.forgot-submit-btn:hover {
+  background: linear-gradient(135deg, #0080e6, #00bfe6);
+  box-shadow: 0 6px 20px rgba(0, 150, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+.forgot-submit-btn.is-loading {
+  background: linear-gradient(135deg, #0096ff, #00d4ff);
+  opacity: 0.8;
 }
 
 /* 响应式 */

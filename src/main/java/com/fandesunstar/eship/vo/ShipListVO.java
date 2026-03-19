@@ -11,7 +11,11 @@ public class ShipListVO {
 
     private Long id;
     private String shipName;
+    private Long ownerId;
+    private String ownerName;
     private String shipType;
+    private BigDecimal tonnage;
+    private Integer buildYear;
     private BigDecimal dailyRent;
     private String status;
     private BigDecimal rating;
