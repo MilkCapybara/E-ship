@@ -11,9 +11,11 @@
 
 ## 🎯 项目简介
 
-E-ship（船易达）是一个功能完整的智慧航运船舶租赁电子商务平台，采用前后端分离架构开发。平台连接船东（出租方）和租家（承租方），通过平台管理员进行监管和服务。提供船舶信息展示、智能搜索推荐、在线合约签订、收藏管理、数据统计、**WebSocket实时通知**等核心功能，配备精美的海事科技风格UI设计，旨在简化船舶租赁流程，提高交易效率。
+E-ship（船易达）是一个功能完整的智慧航运船舶租赁电子商务平台，采用前后端分离架构开发。平台连接船东（出租方）和租家（承租方），通过平台管理员进行监管和服务。提供船舶信息展示、智能搜索推荐、在线合约签订、**PDF合约自动生成**、收藏管理、数据统计、**WebSocket实时通知**等核心功能，配备精美的海事科技风格UI设计，旨在简化船舶租赁流程，提高交易效率。
 
-**🆕 最新功能**：WebSocket实时通知系统已上线！船东和租家在任何页面都能实时收到合约状态更新通知，无需刷新页面。
+**🆕 最新功能**：
+- **WebSocket实时通知系统**：船东和租家在任何页面都能实时收到合约状态更新通知，无需刷新页面
+- **PDF合约自动生成**：船东审核通过后自动生成专业格式的PDF合约并发送到双方邮箱
 
 ## 📊 项目统计
 
@@ -21,7 +23,7 @@ E-ship（船易达）是一个功能完整的智慧航运船舶租赁电子商�
 - **前端代码**：17个Vue组件，约4500+行代码
 - **API端点**：38+个RESTful接口
 - **数据表**：7张核心业务表
-- **功能模块**：5大核心模块（认证、船东、租家、管理员、实时通知）
+- **功能模块**：6大核心模块（认证、船东、租家、管理员、PDF合约生成、实时通知）
 - **WebSocket连接**：全页面实时通知支持
 
 ## 💻 技术栈
@@ -109,6 +111,7 @@ E-ship（船易达）是一个功能完整的智慧航运船舶租赁电子商�
 - 审核合约（同意/拒绝）
 - 待审核合约列表
 - 合约状态实时更新
+- **PDF合约自动生成**：审核通过后自动生成正式合约PDF并发送到双方邮箱
 
 #### 合约管理
 - 查看所有合约（进行中/已完成/已拒绝）
@@ -176,7 +179,26 @@ E-ship（船易达）是一个功能完整的智慧航运船舶租赁电子商�
 - 合约状态监控
 - 合约搜索和筛选
 
-### 5. 详情页面 ✅
+### 5. PDF合约自动生成 ✅
+
+#### 合约PDF生成
+- **自动触发**：船东审核通过合约后自动生成
+- **完整内容**：包含双方信息、船舶信息、租赁条款、权利义务、违约责任等
+- **专业格式**：采用标准合同格式，包含合同编号、签署日期、电子签章
+- **中文支持**：使用iText 7库，完美支持中文字体
+- **双方邮件发送**：自动发送PDF合约到船东和租家的注册邮箱
+- **合约编号规则**：ES-{合约ID}-{日期}（如：ES-123-20260319）
+
+#### 合约内容结构
+- **基本信息**：合同编号、甲乙双方信息（姓名、公司、邮箱、信用评分）
+- **船舶信息**：船舶名称、类型、载重、建造年份、船级社认证
+- **租赁条款**：租赁期限、日租金、总租金、租赁用途、特殊要求
+- **权利义务**：甲方（船东）和乙方（租家）的权利与义务
+- **违约责任**：违约金计算、赔偿条款
+- **争议解决**：协商、调解、仲裁机制
+- **签署信息**：双方电子签章、签署日期
+
+### 6. 详情页面 ✅
 
 #### 船舶详情页
 - 完整船舶信息展示
@@ -194,7 +216,7 @@ E-ship（船易达）是一个功能完整的智慧航运船舶租赁电子商�
 - 审核功能（船东）
 - 取消功能（租家）
 
-### 6. 实时通知系统 ✅ 🆕
+### 7. 实时通知系统 ✅ 🆕
 
 #### WebSocket实时通知
 - **全页面覆盖**：船东和租家在任何页面都能收到实时通知
@@ -359,7 +381,17 @@ E-ship（船易达）是一个功能完整的智慧航运船舶租赁电子商�
 - [x] Bug修复
 - [x] 撰写项目文档
 
-### ✅ 第八阶段：实时通知系统（已完成）🆕
+### ✅ 第八阶段：PDF合约自动生成（已完成）
+- [x] 集成iText 7 PDF生成库
+- [x] 实现ContractPdfService服务
+- [x] 设计专业合约PDF模板（中文支持）
+- [x] 实现合约内容HTML生成
+- [x] 实现PDF自动生成功能
+- [x] 实现邮件附件发送功能
+- [x] 集成到合约审核流程
+- [x] 测试PDF生成和邮件发送
+
+### ✅ 第九阶段：实时通知系统（已完成）🆕
 - [x] 集成Spring WebSocket
 - [x] 实现WebSocket配置和处理器
 - [x] 实现前端WebSocket服务（单例模式）
@@ -385,13 +417,21 @@ E-ship（船易达）是一个功能完整的智慧航运船舶租赁电子商�
 - **高性能**：单例模式，全局只有一个WebSocket连接
 - **用户体验**：美观的消息提示，不打扰用户操作
 
-### 3. 精美的UI设计
+### 3. PDF合约自动生成
+- **智能生成**：船东审核通过后自动生成专业格式的PDF合约
+- **完整内容**：包含双方信息、船舶详情、租赁条款、法律条文等完整合约内容
+- **自动发送**：生成后自动发送到船东和租家的注册邮箱，无需手动操作
+- **中文支持**：基于iText 7库，完美支持中文字体和排版
+- **标准格式**：采用标准船舶租赁合同格式，具有法律效力
+- **可追溯性**：每份合约都有唯一编号，便于查询和管理
+
+### 4. 精美的UI设计
 - 独特的海事科技风格主题
 - 丰富的动画效果（粒子、波浪、光效、3D翻转）
 - 自定义海事风格组件
 - 响应式设计，适配多种设备
 
-### 4. 安全性设计
+### 5. 安全性设计
 - 密码强度验证（12位+大小写+数字+特殊字符）
 - BCrypt密码加密存储
 - JWT令牌认证
@@ -399,20 +439,20 @@ E-ship（船易达）是一个功能完整的智慧航运船舶租赁电子商�
 - 账号锁定机制（防暴力破解）
 - 登录日志记录
 
-### 5. 良好的代码质量
+### 6. 良好的代码质量
 - 清晰的分层架构（Controller/Service/Mapper）
 - 统一的代码风格和命名规范
 - 完善的错误处理和日志记录
 - 详细的注释文档
 - 高可维护性和可扩展性
 
-### 6. 数据可视化
+### 7. 数据可视化
 - ECharts图表展示
 - 用户角色分布饼图
 - 船舶类型分布饼图
 - 实时数据统计
 
-### 7. 用户体验优化
+### 8. 用户体验优化
 - 流畅的页面切换动画
 - 友好的错误提示信息
 - 直观的操作反馈
@@ -744,7 +784,8 @@ npm run build
 3. 添加船舶信息（名称、类型、载重、租金等）
 4. 查看合约信箱，接收租家的租赁申请
 5. 审核合约（同意或拒绝）
-6. 管理所有合约，跟踪租赁状态
+6. 系统自动生成PDF合约并发送到双方邮箱（审核通过后）
+7. 管理所有合约，跟踪租赁状态
 
 ### 租家使用场景
 1. 注册租家账号
@@ -754,7 +795,8 @@ npm run build
 5. 收藏感兴趣的船舶
 6. 创建租赁合约，填写租赁信息
 7. 查看合约状态，等待船东审核
-8. 管理所有合约
+8. 收到审核通过通知，查收邮箱中的PDF合约
+9. 管理所有合约
 
 ### 管理员使用场景
 1. 使用管理员账号登录
@@ -768,12 +810,13 @@ npm run build
 
 ### 功能扩展
 - [x] 实时消息通知（WebSocket）✅ 已完成
+- [x] PDF合约自动生成（iText 7）✅ 已完成
 - [ ] 船舶位置追踪（地图集成）
 - [ ] 在线支付功能（支付宝/微信支付）
 - [ ] 评价和评分系统完善
-- [ ] 数据导出功能（Excel/PDF）
+- [ ] 数据导出功能（Excel/PDF报表）
 - [ ] 船舶保险服务
-- [ ] 合约电子签名
+- [ ] 合约电子签名（数字证书）
 - [ ] 移动端App开发
 - [ ] 通知历史记录
 - [ ] 桌面通知（Notification API）
@@ -844,6 +887,7 @@ A: 修改前端API基础URL，配置Nginx反向代理，设置DNS解析。
 - ✅ 精美的海事科技风格UI
 - ✅ 完善的安全机制
 - ✅ 详细的项目文档
+- ✅ PDF合约自动生成系统
 - ✅ WebSocket实时通知系统 🆕
 
 ### 技术收获
@@ -855,6 +899,8 @@ A: 修改前端API基础URL，配置Nginx反向代理，设置DNS解析。
 - 掌握RESTful API设计
 - 掌握PostgreSQL数据库
 - 掌握ECharts数据可视化
+- 掌握iText 7 PDF生成技术
+- 掌握邮件附件发送技术
 - 掌握WebSocket实时通信技术 🆕
 - 掌握Spring WebSocket框架 🆕
 
@@ -908,9 +954,11 @@ Copyright © 2026 孙帆. All rights reserved.
 
 Made with ❤️ by 孙帆
 
-**最后更新时间**：2026-03-18
+**最后更新时间**：2026-03-19
 
-**最新更新**：✨ 新增WebSocket实时通知系统，支持船东和租家在所有页面实时接收合约状态更新通知
+**最新更新**：
+- ✨ 新增WebSocket实时通知系统，支持船东和租家在所有页面实时接收合约状态更新通知
+- ✨ 新增PDF合约自动生成功能，审核通过后自动生成并发送专业格式的PDF合约到双方邮箱
 
 </div>
 
@@ -930,9 +978,11 @@ Made with ❤️ by 孙帆
 
 ## 🎯 Project Overview
 
-E-ship is a fully functional smart maritime vessel rental e-commerce platform developed with a front-end and back-end separation architecture. The platform connects ship owners (lessors) and renters (lessees), supervised by platform administrators. It provides vessel information display, intelligent search and recommendation, online contract signing, favorites management, data statistics, **WebSocket real-time notifications**, and other core functions, equipped with an exquisite maritime technology style UI design, aiming to simplify the vessel rental process and improve transaction efficiency.
+E-ship is a fully functional smart maritime vessel rental e-commerce platform developed with a front-end and back-end separation architecture. The platform connects ship owners (lessors) and renters (lessees), supervised by platform administrators. It provides vessel information display, intelligent search and recommendation, online contract signing, **automatic PDF contract generation**, favorites management, data statistics, **WebSocket real-time notifications**, and other core functions, equipped with an exquisite maritime technology style UI design, aiming to simplify the vessel rental process and improve transaction efficiency.
 
-**🆕 Latest Feature**: WebSocket real-time notification system is now live! Ship owners and renters can receive contract status update notifications in real-time on any page without refreshing.
+**🆕 Latest Features**:
+- **WebSocket Real-time Notification System**: Ship owners and renters can receive contract status update notifications in real-time on any page without refreshing
+- **Automatic PDF Contract Generation**: Automatically generates professional PDF contracts and sends them to both parties' emails after ship owner approval
 
 ## 📊 Project Statistics
 
@@ -940,7 +990,7 @@ E-ship is a fully functional smart maritime vessel rental e-commerce platform de
 - **Frontend Code**: 17 Vue components, approximately 4500+ lines of code
 - **API Endpoints**: 38+ RESTful interfaces
 - **Database Tables**: 7 core business tables
-- **Functional Modules**: 5 core modules (Authentication, Owner, Renter, Admin, Real-time Notification)
+- **Functional Modules**: 6 core modules (Authentication, Owner, Renter, Admin, PDF Contract Generation, Real-time Notification)
 - **WebSocket Connection**: Full-page real-time notification support
 
 ## 💻 Technology Stack
@@ -1028,6 +1078,7 @@ The system is designed with three user roles:
 - Review contracts (Approve/Reject)
 - Pending contract list
 - Real-time contract status updates
+- **Automatic PDF Contract Generation**: Automatically generate formal contract PDF and send to both parties' emails after approval
 
 #### Contract Management
 - View all contracts (In Progress/Completed/Rejected)
@@ -1095,7 +1146,26 @@ The system is designed with three user roles:
 - Contract status monitoring
 - Contract search and filtering
 
-### 5. Detail Pages ✅
+### 5. Automatic PDF Contract Generation ✅
+
+#### Contract PDF Generation
+- **Automatic Trigger**: Automatically generated after ship owner approves the contract
+- **Complete Content**: Includes party information, vessel details, rental terms, rights and obligations, breach of contract liability, etc.
+- **Professional Format**: Standard contract format with contract number, signing date, and electronic seal
+- **Chinese Support**: Uses iText 7 library with perfect Chinese font support
+- **Email to Both Parties**: Automatically sends PDF contract to both ship owner and renter's registered emails
+- **Contract Number Format**: ES-{ContractID}-{Date} (e.g., ES-123-20260319)
+
+#### Contract Content Structure
+- **Basic Information**: Contract number, party information (name, company, email, credit score)
+- **Vessel Information**: Vessel name, type, tonnage, build year, classification society certification
+- **Rental Terms**: Rental period, daily rent, total rent, rental purpose, special requirements
+- **Rights and Obligations**: Rights and obligations of Party A (Owner) and Party B (Renter)
+- **Breach of Contract Liability**: Penalty calculation, compensation clauses
+- **Dispute Resolution**: Negotiation, mediation, and arbitration mechanisms
+- **Signature Information**: Electronic seals and signing dates for both parties
+
+### 6. Detail Pages ✅
 
 #### Vessel Detail Page
 - Complete vessel information display
@@ -1238,7 +1308,17 @@ The system is designed with three user roles:
 - [x] Bug fixes
 - [x] Write project documentation
 
-### ✅ Phase 8: Real-time Notification System (Completed) 🆕
+### ✅ Phase 8: Automatic PDF Contract Generation (Completed)
+- [x] Integrate iText 7 PDF generation library
+- [x] Implement ContractPdfService
+- [x] Design professional contract PDF template (Chinese support)
+- [x] Implement contract content HTML generation
+- [x] Implement automatic PDF generation
+- [x] Implement email attachment sending
+- [x] Integrate into contract approval process
+- [x] Test PDF generation and email sending
+
+### ✅ Phase 9: Real-time Notification System (Completed) 🆕
 - [x] Integrate Spring WebSocket
 - [x] Implement WebSocket configuration and handler
 - [x] Implement frontend WebSocket service (singleton pattern)
@@ -1256,13 +1336,29 @@ The system is designed with three user roles:
 - Full functionality for three roles (Owner/Renter/Administrator)
 - Full lifecycle contract management (Create→Review→Execute→Complete)
 
-### 2. Exquisite UI Design
+### 2. Real-time Notification System 🆕
+- **Full-page Coverage**: Ship owners and renters receive real-time notifications on any page
+- **WebSocket Technology**: Bidirectional real-time communication based on Spring WebSocket
+- **Smart Refresh**: Automatic data refresh on related pages without manual operation
+- **Auto Reconnection**: Automatic reconnection mechanism ensures no notification loss
+- **High Performance**: Singleton pattern with only one global WebSocket connection
+- **User Experience**: Beautiful message prompts that don't interrupt user operations
+
+### 3. Automatic PDF Contract Generation
+- **Smart Generation**: Automatically generates professional PDF contracts after ship owner approval
+- **Complete Content**: Includes party information, vessel details, rental terms, legal clauses, and complete contract content
+- **Automatic Sending**: Automatically sends to both ship owner and renter's registered emails without manual operation
+- **Chinese Support**: Based on iText 7 library with perfect Chinese font and layout support
+- **Standard Format**: Uses standard vessel rental contract format with legal validity
+- **Traceability**: Each contract has a unique number for easy query and management
+
+### 4. Exquisite UI Design
 - Unique maritime technology style theme
 - Rich animation effects (particles, waves, light effects, 3D flip)
 - Custom maritime style components
 - Responsive design, adapts to multiple devices
 
-### 3. Security Design
+### 5. Security Design
 - Password strength validation (12+ characters with uppercase, lowercase, numbers, special characters)
 - BCrypt password encryption storage
 - JWT token authentication
@@ -1270,20 +1366,20 @@ The system is designed with three user roles:
 - Account lock mechanism (prevent brute force attacks)
 - Login log recording
 
-### 4. Good Code Quality
+### 6. Good Code Quality
 - Clear layered architecture (Controller/Service/Mapper)
 - Unified code style and naming conventions
 - Comprehensive error handling and logging
 - Detailed code comments
 - High maintainability and extensibility
 
-### 5. Data Visualization
+### 7. Data Visualization
 - ECharts chart display
 - User role distribution pie chart
 - Vessel type distribution pie chart
 - Real-time data statistics
 
-### 6. User Experience Optimization
+### 8. User Experience Optimization
 - Smooth page transition animations
 - Friendly error messages
 - Intuitive operation feedback
@@ -1613,7 +1709,8 @@ Test flow example:
 3. Add vessel information (name, type, tonnage, rent, etc.)
 4. Check contract inbox, receive rental applications from renters
 5. Review contracts (approve or reject)
-6. Manage all contracts, track rental status
+6. System automatically generates PDF contract and sends to both parties' emails (after approval)
+7. Manage all contracts, track rental status
 
 ### Renter Use Case
 1. Register renter account
@@ -1623,7 +1720,8 @@ Test flow example:
 5. Favorite interesting vessels
 6. Create rental contract, fill rental information
 7. View contract status, wait for owner review
-8. Manage all contracts
+8. Receive approval notification, check email for PDF contract
+9. Manage all contracts
 
 ### Administrator Use Case
 1. Login with administrator account
@@ -1637,12 +1735,13 @@ Test flow example:
 
 ### Feature Expansion
 - [x] Real-time message notification (WebSocket) ✅ Completed
+- [x] Automatic PDF contract generation (iText 7) ✅ Completed
 - [ ] Vessel location tracking (map integration)
 - [ ] Online payment function (Alipay/WeChat Pay)
 - [ ] Improve rating and review system
-- [ ] Data export function (Excel/PDF)
+- [ ] Data export function (Excel/PDF reports)
 - [ ] Vessel insurance service
-- [ ] Contract electronic signature
+- [ ] Contract electronic signature (digital certificate)
 - [ ] Mobile app development
 - [ ] Notification history
 - [ ] Desktop notification (Notification API)
@@ -1713,6 +1812,7 @@ A: Modify frontend API base URL, configure Nginx reverse proxy, set DNS resoluti
 - ✅ Exquisite maritime technology style UI
 - ✅ Comprehensive security mechanism
 - ✅ Detailed project documentation
+- ✅ Automatic PDF contract generation system
 - ✅ WebSocket real-time notification system 🆕
 
 ### Technical Gains
@@ -1724,6 +1824,8 @@ A: Modify frontend API base URL, configure Nginx reverse proxy, set DNS resoluti
 - Master RESTful API design
 - Master PostgreSQL database
 - Master ECharts data visualization
+- Master iText 7 PDF generation technology
+- Master email attachment sending technology
 - Master WebSocket real-time communication technology 🆕
 - Master Spring WebSocket framework 🆕
 
@@ -1777,8 +1879,10 @@ Thanks to the following open source projects and technical communities:
 
 Made with ❤️ by Sun Fan
 
-**Last Updated**: March 18, 2026
+**Last Updated**: March 19, 2026
 
-**Latest Update**: ✨ Added WebSocket real-time notification system, supporting ship owners and renters to receive contract status update notifications in real-time on all pages
+**Latest Updates**:
+- ✨ Added WebSocket real-time notification system, supporting ship owners and renters to receive contract status update notifications in real-time on all pages
+- ✨ Added automatic PDF contract generation feature, automatically generates and sends professional PDF contracts to both parties' emails after approval
 
 </div>
